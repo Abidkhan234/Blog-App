@@ -10,13 +10,16 @@
     <link rel="stylesheet" href="./assets/Css/style.css" />
   </head>
   <body>
-    
     <nav
       class="sticky top-0 left-0 w-full sm:px-5 px-2.5 py-4 flex justify-between items-center flex-wrap"
     >
       <div class="nav-left">
         <div class="logo max-[360px]:w-36">
-          <img src="./assets/images/light-Logo.png" alt="" class="w-full h-full object-cover" />
+          <img
+            src="./assets/images/light-Logo.png"
+            alt=""
+            class="w-full h-full object-cover"
+          />
         </div>
       </div>
       <div class="nav-right flex sm:gap-7 gap-3">
@@ -35,9 +38,33 @@
           </button>
         </a>
       </div>
-    </nav>
+      <div class="nav-hidden hidden">
+        <div
+          class="open-btn relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 cursor-pointer"
+        >
+          <span
+            class="font-medium text-gray-600 dark:text-gray-300"
+            id="userPic"
+          ></span>
+        </div>
 
+        <div
+          class="hiddenDiv absolute bottom-[-130%] right-[2%] opacity-0 invisible w-full max-w-[300px] flex flex-col gap-5 justify-center items-center bg-white text-[#181A2A] rounded-md py-2 px-3 transition-opacity duration-300"
+        >
+          <h2 class="text-2xl font-semibold">
+            Welcome <span class="userName"></span>
+          </h2>
+          <div class="">
+            <button
+              class="py-2 px-4 bg-red-500 text-white font-medium rounded-lg cursor-pointer"
+             id="signOutBtn">
+              Sign out
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
   </body>
 
-  <script src="./assets/JS/app.js" type="module"></script>
+  <script src="./assets/JS/index.js" type="module"></script>
 </html>
