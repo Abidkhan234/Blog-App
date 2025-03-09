@@ -206,7 +206,7 @@ signUpBtn?.addEventListener("click", (e) => {
 
                 setTimeout(() => {
                     window.location.href = "../screen/loginPage.html";
-                }, 1000);
+                }, 1500);
 
                 emailBox.value = "";
                 passwordBox.value = "";
