@@ -39,7 +39,7 @@ const userData = JSON.parse(localStorage.getItem("userData"));
 
 const uid = localStorage.getItem("uid");
 
-import { addDoc, collection, db, doc, getDoc, getDocs } from "./firebase.js";
+import { addDoc, collection, db, doc, getDoc, getDocs, query, where } from "./firebase.js";
 
 if (userData) {
 
@@ -70,7 +70,7 @@ if (userData) {
 
         localStorage.removeItem("userData");
 
-        window.location.reload();
+        window.location.href = "../index.html";
 
     })
 
@@ -160,20 +160,23 @@ if (userData) {
 
 }
 
-window.addEventListener("load", () => makingCards());
+if (userData) {
+    window.addEventListener("load", () => makingUserCards());
+}
 
+const makingUserCards = async () => {
 
-const makingCards = async () => {
-    
-    let blogData = [];
+    const q = query(collection(db, "Blogs"), where("uid", "==", uid));
 
-    const querySnapshot = await getDocs(collection(db, "Blogs"));
+    const querySnapshot = await getDocs(q);
+    let yourBlogData = [];
 
     querySnapshot.forEach((doc) => {
-        blogData.push(doc.data());
+        yourBlogData.push(doc.data());
     });
 
-    blogData.forEach(async (v) => {
+
+    yourBlogData.forEach(async (v, index) => {
 
         const docRef = doc(db, "users", v.uid);
         const docSnap = await getDoc(docRef);
@@ -182,38 +185,80 @@ const makingCards = async () => {
         if (docSnap.exists()) {
             data = docSnap.data().fullName;
         } else {
-            // docSnap.data() will be undefined in this case
             console.log("No such document!");
+            return;
         }
-
 
         const div = document.createElement("div");
         div.className += "lg:col-span-6 col-span-12 border-2 border-[#242535] py-3 px-2.5 rounded-md flex flex-col gap-7";
 
         div.innerHTML = `
-              <div class="card-header flex justify-between items-center">
-                <div
-                  class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600"
-                >
-                  <span
-                    class="font-semibold text-gray-600 dark:text-gray-300 text-lg"
-                    id="userPic"
-                    >${data.charAt(0)}</span
-                  >
-                </div>
-              </div>
-              <div class="flex flex-col gap-5">
-                <h2
-                  class="card-heading lg:text-3xl text-2xl font-bold lg:tracking-wider lg:leading-9 sm:leading-7 text-balance"
-                >
-                ${v.title}
-                </h2>
-                <p
-                  class="card-content lg:text-lg lg:leading-8 sm:leading-6 sm:text-base text-sm"
-                >
-                  ${v.description}
-                </p>
-              </div>`;
+                  <div class="card-header flex justify-between items-center">
+                    <div
+                      class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600"
+                    >
+                      <span
+                        class="font-semibold text-gray-600 dark:text-gray-300 text-lg"
+                        id="userPic"
+                        >${data.charAt(0)}</span
+                      >
+                    </div>
+                     <div class="flex">
+      <button
+        id="dropdownButton${index}"
+        data-dropdown-toggle="dropdown-${index}"
+        class="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5"
+        type="button"
+      >
+        <span class="sr-only">Open dropdown</span>
+        <svg
+          class="w-5 h-5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 16 3"
+        >
+          <path
+            d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"
+          />
+        </svg>
+      </button>
+      <!-- Dropdown menu -->
+      <div
+        id="dropdown-${index}"
+        class="z-30 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700"
+      >
+        <ul class="py-2" aria-labelledby="dropdownButton${index}">
+          <li>
+            <a
+              href="#"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+              >Edit</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+              >Delete</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+                  </div>
+                  <div class="flex flex-col gap-5">
+                    <h2
+                      class="card-heading lg:text-3xl text-2xl font-bold lg:tracking-wider lg:leading-9 sm:leading-7 text-balance"
+                    >
+                    ${v.title}
+                    </h2>
+                    <p
+                      class="card-content lg:text-lg lg:leading-8 sm:leading-6 sm:text-base text-sm"
+                    >
+                      ${v.description}
+                    </p>
+                  </div>`;
 
         cardContainer.appendChild(div);
     })

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your Blogs</title>
+    <title>Your Blog</title>
 
     <link
       rel="stylesheet"
@@ -32,7 +32,7 @@
     <!-- Add blog modal -->
 
     <div
-      class="uploadBlogModal absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full max-w-[400px] py-3 px-4 bg-white rounded-md text-black flex flex-col gap-6 z-50 transition-opacity duration-300 opacity-0 invisible"
+      class="uploadBlogModal fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full max-w-[400px] py-3 px-4 bg-white rounded-md text-black flex flex-col gap-6 z-50 transition-opacity duration-300 opacity-0 invisible"
     >
       <div class="cross absolute top-0 right-0">
         <button
@@ -71,6 +71,7 @@
         </div>
         <div class="form-btn">
           <button
+            id="uploadBlogBtn"
             class="bg-indigo-700 py-2 px-4 text-white rounded-md hover:bg-indigo-600 cursor-pointer"
           >
             Upload Blog
@@ -98,14 +99,14 @@
         </div>
       </div>
       <div class="nav-right flex sm:gap-7 gap-3">
-        <a href="./screen/loginPage.html">
+        <a href="./loginPage.html">
           <button
             class="bg-white py-1.5 sm:px-4 px-3 rounded-xl text-[#181A2A] font-semibold tracking-wide sm:text-lg cursor-pointer hover:shadow-white shadow-sm transition-shadow duration-200 ease-in-out"
           >
             Login
           </button>
         </a>
-        <a href="./screen/signUpPage.html">
+        <a href="./signUpPage.html">
           <button
             class="bg-white py-1.5 sm:px-4 px-3 rounded-xl text-[#181A2A] font-semibold tracking-wide sm:text-lg cursor-pointer hover:shadow-white shadow-sm transition-shadow duration-200 ease-in-out"
           >
@@ -120,6 +121,7 @@
         >
           Add Blog
         </button>
+
         <div
           class="open-btn relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 cursor-pointer"
         >
@@ -142,7 +144,7 @@
             >
               Sign out
             </button>
-            <a href="./screen/yourBlogs.html">
+            <a href="#">
               <button
                 class="py-2 px-4 bg-indigo-600 text-white font-medium rounded-lg cursor-pointer"
                 id="userBlogBtn"
@@ -155,53 +157,13 @@
       </div>
     </nav>
 
-    <main>
-      <section>
-        <div class="">
-          <div class="flex">
-            <button
-              id="dropdownButton"
-              data-dropdown-toggle="dropdown"
-              class="inline-block text-white text-md p-1.5 cursor-pointer"
-              type="button"
-            >
-              <span class="sr-only">Open dropdown</span>
-              <svg
-                class="w-5 h-5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 16 3"
-              >
-                <path
-                  d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"
-                />
-              </svg>
-            </button>
-            <!-- Dropdown menu -->
-            <div
-              id="dropdown"
-              class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700"
-            >
-              <ul class="py-2" aria-labelledby="dropdownButton">
-                <li>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >Edit</a
-                  >
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >Delete</a
-                  >
-                </li>
-              </ul>
-            </div>
+    <main class="mt-20 px-5">
+      <section class="allBlogs">
+        <div class="all-blogs-container flex flex-col gap-10">
+          <div class="heading">
+            <h2 class="text-3xl font-bold text-white">Latest Posts</h2>
           </div>
+          <div class="card-container grid grid-cols-12 gap-5"></div>
         </div>
       </section>
     </main>
@@ -214,5 +176,5 @@
 
   <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 
-  <script src="../assets/JS/index.js" type="module"></script>
+  <script src="../assets/JS/yourBlogs.js" type="module"></script>
 </html>

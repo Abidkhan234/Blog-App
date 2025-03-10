@@ -32,7 +32,7 @@
     <!-- Add blog modal -->
 
     <div
-      class="uploadBlogModal absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full max-w-[400px] py-3 px-4 bg-white rounded-md text-black flex flex-col gap-6 z-50 transition-opacity duration-300 opacity-0 invisible"
+      class="uploadBlogModal fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full max-w-[400px] py-3 px-4 bg-white rounded-md text-black flex flex-col gap-6 z-50 transition-opacity duration-300 opacity-0 invisible"
     >
       <div class="cross absolute top-0 right-0">
         <button
@@ -163,64 +163,7 @@
           <div class="heading">
             <h2 class="text-3xl font-bold text-white">Latest Posts</h2>
           </div>
-          <div class="card-container grid grid-cols-12 gap-5">
-            <div
-              class="lg:col-span-6 col-span-12 border-2 border-[#242535] py-3 px-2.5 rounded-md flex flex-col gap-7"
-            >
-              <div class="card-header flex justify-between items-center">
-                <div
-                  class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600"
-                >
-                  <span
-                    class="font-semibold text-gray-600 dark:text-gray-300 text-lg"
-                    id="userPic"
-                    >S</span
-                  >
-                </div>
-              </div>
-              <div class="flex flex-col gap-5">
-                <h2
-                  class="card-heading lg:text-3xl text-2xl font-bold lg:tracking-wider lg:leading-9 sm:leading-7 text-balance"
-                >
-                  Theodore Roosevelt
-                </h2>
-                <p
-                  class="card-content lg:text-lg lg:leading-8 sm:leading-6 sm:text-base text-sm"
-                >
-                  Do what you can, with what you have, where you are.
-                </p>
-              </div>
-            </div>
-
-            <div
-              class="lg:col-span-6 col-span-12 border-2 border-[#242535] py-3 px-2.5 rounded-md flex flex-col gap-7"
-            >
-              <div class="card-header flex justify-between items-center">
-                <div
-                  class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600"
-                >
-                  <span
-                    class="font-semibold text-gray-600 dark:text-gray-300 text-lg"
-                    id="userPic"
-                    >B</span
-                  >
-                </div>
-              </div>
-              <div class="flex flex-col gap-5">
-                <h2
-                  class="card-heading lg:text-3xl text-2xl font-bold lg:tracking-wider lg:leading-9 sm:leading-7 text-balance"
-                >
-                  Winston Churchill
-                </h2>
-                <p
-                  class="card-content lg:text-lg lg:leading-8 sm:leading-6 sm:text-base text-sm"
-                >
-                  Success is not final, failure is not fatal: it is the courage
-                  to continue that counts.
-                </p>
-              </div>
-            </div>
-          </div>
+          <div class="card-container grid grid-cols-12 gap-5"></div>
         </div>
       </section>
     </main>

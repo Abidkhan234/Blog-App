@@ -42,6 +42,8 @@ const passwordRegex = /^(?=.*[0-9])[a-zA-Z0-9]{6,16}$/;
 
 const uid = localStorage.getItem("uid");
 
+
+
 // Error Function
 
 const errorFunc = (message, color) => {
@@ -109,6 +111,8 @@ loginBtn?.addEventListener("click", (e) => {
                                 data = docSnap.data();
 
                                 localStorage.setItem("userData", JSON.stringify(data));
+
+                                localStorage.setItem("uid", user.uid);
 
                             } else {
                                 console.log("Not ok");
@@ -198,7 +202,12 @@ signUpBtn?.addEventListener("click", (e) => {
                             errorFunc("Email verification send.", "green");
                         });
 
-                    localStorage.setItem("uid", user.uid);
+                    let data = {
+                        email: emailBox.value,
+                        fullName: fullNameBox.value
+                    };
+
+                    localStorage.setItem("userData", JSON.stringify(data))
 
                 } catch (error) {
                     console.log(error);
