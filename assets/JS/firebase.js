@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js'
-import { getFirestore, setDoc, doc, getDoc, addDoc, collection, getDocs, query, where, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js'
+import { getFirestore, setDoc, doc, getDoc, addDoc, collection, getDocs, query, where, deleteDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js'
 
 
 const firebaseConfig = {
@@ -18,4 +18,4 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 
-export { createUserWithEmailAndPassword, auth, sendEmailVerification, signInWithEmailAndPassword, db, setDoc, doc, getDoc, addDoc, collection, getDocs, query, where, deleteDoc };
+export { createUserWithEmailAndPassword, auth, sendEmailVerification, signInWithEmailAndPassword, db, setDoc, doc, getDoc, addDoc, collection, getDocs, query, where, deleteDoc, updateDoc };

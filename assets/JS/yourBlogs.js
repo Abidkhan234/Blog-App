@@ -40,7 +40,7 @@ const userData = JSON.parse(localStorage.getItem("userData"));
 
 const uid = localStorage.getItem("uid");
 
-import { addDoc, collection, db, doc, getDoc, getDocs, query, where, deleteDoc } from "./firebase.js";
+import { addDoc, collection, db, doc, getDoc, getDocs, query, where, deleteDoc, updateDoc } from "./firebase.js";
 
 
 const errorFunc = (message, color) => {
@@ -95,14 +95,14 @@ if (userData) {
   })
 
   uploadBlogBtn.addEventListener("click", () => {
-    uploadBlogModal.classList.remove("invisible", "opacity-0");
-    modalBG.classList.remove("opacity-0", "invisible")
+    uploadBlogModal.classList.remove("invisible", "opacity-0", "pointer-events-none");
+    modalBG.classList.remove("opacity-0", "invisible", "pointer-events-none")
   })
 
   uploadBlogCloseBtn.addEventListener("click", () => {
-    uploadBlogModal.classList.add("invisible", "opacity-0");
+    uploadBlogModal.classList.add("invisible", "opacity-0", "pointer-events-none");
 
-    modalBG.classList.add("opacity-0", "invisible")
+    modalBG.classList.add("opacity-0", "invisible", "pointer-events-none")
   })
 
   // For Modal popup
@@ -276,6 +276,14 @@ const makingUserCards = async () => {
           class="drop-down-menu absolute bottom-[-75px] right-[50%] p-1 bg-white flex flex-col items-center rounded-md opacity-0 invisible transition-opacity duration-300 w-[150px]"
         >
           <ul class="flex flex-col gap-2.5 w-full text-center">
+          <li>
+              <button
+                data-blog-id="${v.id}"
+                class="edit-blog w-full block text-lg font-medium text-blue-600 hover:bg-gray-200 cursor-pointer"
+              >
+                Edit
+              </button>
+            </li>
             <li>
               <button
                 data-blog-id="${v.id}"
@@ -296,9 +304,9 @@ const makingUserCards = async () => {
                     ${v.data.title}
                     </h2>
                     <p
-                      class="blog-description lg:text-lg lg:leading-8 sm:leading-6 sm:text-base text-sm"
+                    class="blog-description lg:text-lg lg:leading-8 sm:leading-6 sm:text-base text-sm"
                     >
-                      ${v.data.description}
+                    ${v.data.description}
                     </p>
 
                   </div>`;
@@ -326,6 +334,7 @@ const makingUserCards = async () => {
       });
     })
 
+
     editBlogBtn.forEach((v) => {
       v.addEventListener("click", (e) => {
         const blogId = e.target.getAttribute("data-blog-id");
@@ -345,8 +354,67 @@ const deleteEditBlogFunc = async (value, blogUid) => {
 
   const blogDescription = blogCard.querySelector(".blog-description");
 
+  const updateBlogModal = document.getElementById("updateBlogModal");
+
+  const contentBox = updateBlogModal.querySelector("#contentBox");
+
+  const updateBlogCloseBtn = updateBlogModal.querySelector("#closeBtn");
+
+  const titleBox = updateBlogModal.querySelector("#titleBox");
+
+  const updateBlogBtn = document.getElementById("updateBlogBtn");
+
   if (value.innerText === "Edit") {
-      console.log("Edit");
+
+    updateBlogModal.classList.remove("opacity-0", "invisible");
+
+    modalBG.classList.remove("opacity-0", "invisible");
+
+    titleBox.value = blogTtitle.innerText;
+    
+    contentBox.value = blogDescription.innerText;
+
+    // For Modal Close
+    updateBlogCloseBtn.addEventListener("click", () => {
+      updateBlogModal.classList.add("opacity-0", "invisible");
+
+      modalBG.classList.add("opacity-0", "invisible");
+    })
+    // For Modal Close
+
+    updateBlogBtn.addEventListener("click", async (e) => {
+
+      e.preventDefault();
+
+      if (titleBox.value === "" || contentBox.value === "") {
+        errorFunc("All fields are mandatory.", "red");
+      } else {
+
+        try {
+
+          const washingtonRef = doc(db, "Blogs", blogUid);
+
+          await updateDoc(washingtonRef, {
+            title: titleBox.value,
+            description: contentBox.value
+          });
+
+          errorFunc("Blog updated successfully.", "green");
+
+        } catch (error) {
+          console.log(error);
+          return;
+        }
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+
+    })
+
+
+
   } else {
 
     try {
@@ -377,3 +445,4 @@ if (userData) {
 
   });
 }
+

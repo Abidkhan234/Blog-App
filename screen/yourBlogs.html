@@ -4,7 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Your Blog</title>
-    <link rel="shortcut icon" href="../assets/images/Union.png" type="image/x-icon">
+    <link
+      rel="shortcut icon"
+      href="../assets/images/Union.png"
+      type="image/x-icon"
+    />
     <link
       rel="stylesheet"
       type="text/css"
@@ -85,6 +89,59 @@
     ></div>
 
     <!-- Add blog modal -->
+
+    <!-- Update blog modal -->
+
+    <div id="updateBlogModal"
+      class="updateBlogModal fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full max-w-[400px] py-3 px-4 bg-white rounded-md text-black flex flex-col gap-6 z-50 transition-opacity duration-300 opacity-0 invisible"
+    >
+      <div class="cross absolute top-0 right-0">
+        <button
+          id="closeBtn"
+          class="p-2 bg-red-600 hover:bg-red-500 text-white cursor-pointer"
+          style="border-bottom-left-radius: 5px; border-top-right-radius: 5px"
+        >
+          <i class="fas fa-x"></i>
+        </button>
+      </div>
+
+      <div class="top text-center my-2">
+        <h2 class="text-2xl font-semibold">Update Blog</h2>
+      </div>
+
+      <form class="flex flex-col gap-5">
+        <div class="flex flex-col gap-1">
+          <label for="titleBox" class="font-medium text-lg ms-1">Title</label>
+          <input
+            type="text"
+            class="rounded-md w-full"
+            id="titleBox"
+            placeholder="Enter Title"
+          />
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="contentBox" class="font-medium text-lg ms-1"
+            >Description</label
+          >
+          <textarea
+            id="contentBox"
+            class="resize-none"
+            rows="4"
+            placeholder="Enter Description"
+          ></textarea>
+        </div>
+        <div class="form-btn">
+          <button
+            id="updateBlogBtn"
+            class="bg-indigo-700 py-2 px-4 text-white rounded-md hover:bg-indigo-600 cursor-pointer"
+          >
+            Update Blog
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Update blog modal -->
 
     <!-- Loader -->
 
