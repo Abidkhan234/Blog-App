@@ -33,6 +33,10 @@ const modalBG = document.querySelector(".modalBG");
 
 const cardContainer = document.querySelector(".card-container");
 
+const loader = document.querySelector(".loader");
+
+// const dropDownMenus = document.querySelectorAll(".drop-down-menu");
+
 // All Elelments
 
 const userData = JSON.parse(localStorage.getItem("userData"));
@@ -160,11 +164,48 @@ if (userData) {
 
 }
 
-window.addEventListener("load", () => makingCards());
+window.addEventListener("load", () => {
 
+    loader.classList.remove("opacity-0", "invisible");
+
+    makingCards();
+
+});
+
+const timeZoneFunc = (timestamp) => {
+
+    const now = new Date();
+    const postDate = new Date((timestamp.seconds * 1000) + (timestamp.nanoseconds / 1e6));
+    const diffInSeconds = Math.floor((now - postDate) / 1000);
+
+    if (diffInSeconds < 10) return "Recently posted";
+    if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`;
+
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
+
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours} hours ago`;
+
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 30) return `${diffInDays} days ago`;
+
+    const diffInMonths = Math.floor(diffInDays / 30);
+    if (diffInMonths < 12) return `${diffInMonths} months ago`;
+
+    // Format as [Mon-MM-YYYY | HH:mm AM/PM]
+    const monthAbbreviation = postDate.toLocaleString('en-US', { month: 'short' }); // Example: "Mar"
+    const monthNumber = String(postDate.getMonth() + 1).padStart(2, '0'); // Two-digit month
+    const year = postDate.getFullYear();
+    const hours = postDate.getHours() % 12 || 12; // Convert 24h to 12h format
+    const minutes = String(postDate.getMinutes()).padStart(2, '0'); // Ensure two-digit minutes
+    const ampm = postDate.getHours() >= 12 ? "PM" : "AM";
+
+    return `[${monthAbbreviation}-${monthNumber}-${year} | ${hours}:${minutes} ${ampm}]`;
+}
 
 const makingCards = async () => {
-    
+
     let blogData = [];
 
     const querySnapshot = await getDocs(collection(db, "Blogs"));
@@ -172,6 +213,12 @@ const makingCards = async () => {
     querySnapshot.forEach((doc) => {
         blogData.push(doc.data());
     });
+
+    // Sort blogData by timeZone in descending order
+    blogData.sort((a, b) => {
+        return new Date(b.timeZone.seconds * 1000 + b.timeZone.nanoseconds / 1e6) - new Date(a.timeZone.seconds * 1000 + a.timeZone.nanoseconds / 1e6);
+    });
+
 
     blogData.forEach(async (v) => {
 
@@ -201,6 +248,11 @@ const makingCards = async () => {
                     >${data.charAt(0)}</span
                   >
                 </div>
+
+                <div class="text-sm font-medium">
+                <span>${timeZoneFunc(v.timeZone)}</span>
+                </div>
+
               </div>
               <div class="flex flex-col gap-5">
                 <h2
@@ -218,4 +270,5 @@ const makingCards = async () => {
         cardContainer.appendChild(div);
     })
 
+    loader.classList.add("opacity-0", "invisible");
 }
