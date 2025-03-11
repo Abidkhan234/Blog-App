@@ -25,7 +25,6 @@ const uploadBlogCloseBtn = document.getElementById("closeBtn");
 
 const blogBtn = document.getElementById("uploadBlogBtn");
 
-
 const uploadBlogModal = document.querySelector(".uploadBlogModal");
 
 const modalBG = document.querySelector(".modalBG");
@@ -41,7 +40,26 @@ const userData = JSON.parse(localStorage.getItem("userData"));
 
 const uid = localStorage.getItem("uid");
 
-import { addDoc, collection, db, doc, getDoc, getDocs, query, where } from "./firebase.js";
+import { addDoc, collection, db, doc, getDoc, getDocs, query, where, deleteDoc } from "./firebase.js";
+
+
+const errorFunc = (message, color) => {
+
+  Toastify({
+
+    text: message,
+
+    style: {
+      background: color,
+    },
+
+    position: "center",
+
+    duration: 1500,
+
+
+  }).showToast();
+}
 
 if (userData) {
 
@@ -90,24 +108,6 @@ if (userData) {
   // For Modal popup
 
   // For upload Blog fields checking
-
-  const errorFunc = (message, color) => {
-
-    Toastify({
-
-      text: message,
-
-      style: {
-        background: color,
-      },
-
-      position: "center",
-
-      duration: 1500,
-
-
-    }).showToast();
-  }
 
   blogBtn.addEventListener("click", async (e) => {
 
@@ -162,14 +162,6 @@ if (userData) {
 
 }
 
-if (userData) {
-  window.addEventListener("load", () => {
-
-    loader.classList.remove("opacity-0", "invisible");
-
-    makingUserCards();
-  });
-}
 
 const timeZoneFunc = (timestamp) => {
 
@@ -204,12 +196,17 @@ const timeZoneFunc = (timestamp) => {
 }
 
 const dropdownFunc = (event) => {
-  const dropdownMenu = event.currentTarget.nextElementSibling;
+  const parentContainer = event.currentTarget.closest('.relative');
+  const dropdownMenu = parentContainer.querySelector('.drop-down-menu');
+
   if (dropdownMenu.classList.contains("invisible")) {
     dropdownMenu.classList.remove("invisible", "opacity-0");
   } else {
     dropdownMenu.classList.add("invisible", "opacity-0");
   }
+
+  // Stop event propagation
+  event.stopPropagation();
 };
 
 const makingUserCards = async () => {
@@ -218,21 +215,19 @@ const makingUserCards = async () => {
 
   const querySnapshot = await getDocs(q);
   let yourBlogData = [];
+  let blogUid = [];
 
   querySnapshot.forEach((doc) => {
-    yourBlogData.push(doc.data());
+    yourBlogData.push({ id: doc.id, data: doc.data() });
   });
-
 
   yourBlogData.sort((a, b) => {
-    return new Date(b.timeZone.seconds * 1000 + b.timeZone.nanoseconds / 1e6) - new Date(a.timeZone.seconds * 1000 + a.timeZone.nanoseconds / 1e6);
+    return new Date(b.data.timeZone.seconds * 1000 + b.data.timeZone.nanoseconds / 1e6) - new Date(a.data.timeZone.seconds * 1000 + a.data.timeZone.nanoseconds / 1e6);
   });
 
-  let allBtns;
+  yourBlogData.forEach(async (v) => {
 
-  yourBlogData.forEach(async (v, index) => {
-
-    const docRef = doc(db, "users", v.uid);
+    const docRef = doc(db, "users", v.data.uid);
     const docSnap = await getDoc(docRef);
     let data;
 
@@ -244,7 +239,7 @@ const makingUserCards = async () => {
     }
 
     const div = document.createElement("div");
-    div.className += "lg:col-span-6 col-span-12 border-2 border-[#242535] py-3 px-2.5 rounded-md flex flex-col gap-7";
+    div.className += "blog lg:col-span-6 col-span-12 border-2 border-[#242535] py-3 px-2.5 rounded-md flex flex-col gap-7";
 
     div.innerHTML = `
                   <div class="card-header flex justify-between items-center">
@@ -258,7 +253,7 @@ const makingUserCards = async () => {
                       >
                 </div>
                                                            <div class="text-sm font-medium">
-                <span>${timeZoneFunc(v.timeZone)}</span>
+                <span>${timeZoneFunc(v.data.timeZone)}</span>
 
                     </div>
                     
@@ -283,16 +278,8 @@ const makingUserCards = async () => {
           <ul class="flex flex-col gap-2.5 w-full text-center">
             <li>
               <button
-                id="edit-blog"
-                class="w-full block text-lg font-medium text-blue-700 hover:bg-gray-200 cursor-pointer"
-              >
-                Edit
-              </button>
-            </li>
-            <li>
-              <button
-                id="delete-blog"
-                class="w-full block text-lg font-medium text-red-600 hover:bg-gray-200 cursor-pointer"
+                data-blog-id="${v.id}"
+                class="delete-blog w-full block text-lg font-medium text-red-600 hover:bg-gray-200 cursor-pointer"
               >
                 Delete
               </button>
@@ -302,16 +289,16 @@ const makingUserCards = async () => {
       </div>
                      
                   </div>
-                  <div class="flex flex-col gap-5">
+                  <div class="card-body flex flex-col gap-5">
                     <h2
-                      class="card-heading lg:text-3xl text-2xl font-bold lg:tracking-wider lg:leading-9 sm:leading-7 text-balance"
+                      class="blog-title lg:text-3xl text-2xl font-bold lg:tracking-wider lg:leading-9 sm:leading-7 text-balance"
                     >
-                    ${v.title}
+                    ${v.data.title}
                     </h2>
                     <p
-                      class="card-content lg:text-lg lg:leading-8 sm:leading-6 sm:text-base text-sm"
+                      class="blog-description lg:text-lg lg:leading-8 sm:leading-6 sm:text-base text-sm"
                     >
-                      ${v.description}
+                      ${v.data.description}
                     </p>
 
                   </div>`;
@@ -320,13 +307,73 @@ const makingUserCards = async () => {
 
   })
 
-  const dropdownBtns = document.querySelectorAll(".drop-down-btn");
-  dropdownBtns.forEach((btn) => {
-    btn.addEventListener("click", dropdownFunc);
-  });
-
-
-
   loader.classList.add("opacity-0", "invisible");
 
+  setTimeout(() => {
+    const dropdownBtns = document.querySelectorAll(".drop-down-btn");
+
+    dropdownBtns.forEach((v) => {
+      v.addEventListener("click", (e) => dropdownFunc(e))
+    })
+
+    const deleteBlogBtn = document.querySelectorAll(".delete-blog")
+    const editBlogBtn = document.querySelectorAll(".edit-blog")
+
+    deleteBlogBtn.forEach((v) => {
+      v.addEventListener("click", (e) => {
+        const blogId = e.target.getAttribute("data-blog-id");
+        deleteEditBlogFunc(e.target, blogId);
+      });
+    })
+
+    editBlogBtn.forEach((v) => {
+      v.addEventListener("click", (e) => {
+        const blogId = e.target.getAttribute("data-blog-id");
+        deleteEditBlogFunc(e.target, blogId);
+      });
+    })
+
+  }, 800);
+
+}
+
+const deleteEditBlogFunc = async (value, blogUid) => {
+
+  const blogCard = value.closest(".blog");
+
+  const blogTtitle = blogCard.querySelector(".blog-title");
+
+  const blogDescription = blogCard.querySelector(".blog-description");
+
+  if (value.innerText === "Edit") {
+      console.log("Edit");
+  } else {
+
+    try {
+
+      await deleteDoc(doc(db, "Blogs", blogUid));
+
+      errorFunc("Blog Deleted.", "green");
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+
+  }
+
+}
+
+if (userData) {
+  window.addEventListener("DOMContentLoaded", () => {
+
+    loader.classList.remove("opacity-0", "invisible");
+
+    makingUserCards();
+
+  });
 }

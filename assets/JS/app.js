@@ -207,7 +207,7 @@ signUpBtn?.addEventListener("click", (e) => {
                         fullName: fullNameBox.value
                     };
 
-                    localStorage.setItem("userData", JSON.stringify(data))
+                    localStorage.setItem("uid", uid)
 
                 } catch (error) {
                     console.log(error);
