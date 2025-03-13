@@ -1,7 +1,7 @@
 // For password preview-btn
 const previewBtn = document.querySelector(".preview-btn");
 
-previewBtn.addEventListener("click", () => {
+previewBtn?.addEventListener("click", () => {
 
     let i = previewBtn.querySelector("i");
     let password = previewBtn.previousElementSibling;
@@ -30,10 +30,12 @@ const loginBtn = document.getElementById("login-btn");
 
 const signUpBtn = document.getElementById("signUp-btn");
 
+const forgetPasswordBtn = document.getElementById("forget-password-btn");
+
 // All Elements
 
 
-import { auth, createUserWithEmailAndPassword, db, doc, getDoc, sendEmailVerification, setDoc, signInWithEmailAndPassword } from "./firebase.js";
+import { auth, createUserWithEmailAndPassword, db, doc, getDoc, sendEmailVerification, sendPasswordResetEmail, setDoc, signInWithEmailAndPassword } from "./firebase.js";
 
 const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 ;
@@ -41,7 +43,6 @@ const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\")
 const passwordRegex = /^(?=.*[0-9])[a-zA-Z0-9]{6,16}$/;
 
 const uid = localStorage.getItem("uid");
-
 
 
 // Error Function
@@ -233,3 +234,40 @@ signUpBtn?.addEventListener("click", (e) => {
 })
 
 // For Sign Up Form
+
+
+// For Forget password form
+
+forgetPasswordBtn?.addEventListener("click", async (e) => {
+
+    e.target.classList.add("opacity-50", "pointer-events-none");
+
+    e.preventDefault();
+
+    if (emailBox.value === "") {
+        errorFunc("All field is mandatory.", "red");
+
+        e.target.classList.remove("opacity-50", "pointer-events-none");
+    } else if (!emailRegex.test(emailBox.value)) {
+        errorFunc("Invalid email format.", "red");
+
+        e.target.classList.remove("opacity-50", "pointer-events-none");
+    } else {
+
+        sendPasswordResetEmail(auth, emailBox.value)
+            .then(() => {
+                errorFunc("Password reset request send.", "green");
+                window.location.href = "./loginPage.html";
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                errorFunc(errorMessage, "red")
+            });
+
+    }
+
+})
+
+
+// For Forget password form
