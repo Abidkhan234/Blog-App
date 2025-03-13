@@ -5,9 +5,16 @@ const navRight = document.querySelector(".nav-right");
 const navHidden = document.querySelector(".nav-hidden");
 
 
+// For login
+const userPic2 = document.getElementById("userPic2");
+const userName = document.querySelector(".userName-1");
+// For login
+
+// For Google
 const userPic = document.getElementById("userPic");
 
-const userName = document.querySelector(".userName");
+const userName2 = document.querySelector(".userName-2");
+// For Google
 
 
 const contentBox = document.getElementById("contentBox");
@@ -15,7 +22,7 @@ const contentBox = document.getElementById("contentBox");
 const titleBox = document.getElementById("titleBox");
 
 
-const openBtn = document.querySelector(".open-btn");
+const openBtn = document.querySelectorAll(".open-btn");
 
 const signOutBtn = document.getElementById("signOutBtn");
 
@@ -40,7 +47,7 @@ const userData = JSON.parse(localStorage.getItem("userData"));
 
 const uid = localStorage.getItem("uid");
 
-import { addDoc, collection, db, doc, getDoc, getDocs, query, where, deleteDoc, updateDoc } from "./firebase.js";
+import { addDoc, collection, db, doc, getDoc, getDocs, query, where, deleteDoc, updateDoc, onAuthStateChanged, auth, signOut } from "./firebase.js";
 
 
 const errorFunc = (message, color) => {
@@ -61,48 +68,49 @@ const errorFunc = (message, color) => {
   }).showToast();
 }
 
-if (userData) {
-
+const navUserData = () => {
   navRight.classList.add("hidden");
-  navHidden.classList.remove("hidden");
-
-  userPic.innerText = userData.fullName.charAt(0).toUpperCase();
-
-  userName.innerText = userData.fullName;
+  navHidden.classList.replace("hidden", "flex");
 
   // For Modal popup
+  openBtn.forEach((v) => {
+    v.addEventListener("click", () => {
+      let div = document.querySelector(".hiddenDiv");
 
-  openBtn.addEventListener("click", () => {
-    let div = document.querySelector(".hiddenDiv");
+      if (div.classList.contains("invisible")) {
+        div.classList.remove("invisible", "opacity-0");
+      } else {
+        div.classList.add("invisible", "opacity-0");
+      }
 
-    if (div.classList.contains("invisible")) {
-      div.classList.remove("invisible", "opacity-0");
-    } else {
-      div.classList.add("invisible", "opacity-0");
-    }
-
+    })
   })
+
 
   signOutBtn.addEventListener("click", () => {
 
-    navRight.classList.remove("hidden");
-    navHidden.classList.add("hidden");
-
     localStorage.removeItem("userData");
 
-    window.location.href = "../index.html";
+    signOut(auth).then(() => {
+      navRight.classList.remove("hidden");
+      navHidden.classList.add("hidden");
+    }).catch((error) => {
+      console.log(error.message);
+    });
 
+
+      window.location.href = "../index.html";
   })
 
   uploadBlogBtn.addEventListener("click", () => {
-    uploadBlogModal.classList.remove("invisible", "opacity-0", "pointer-events-none");
-    modalBG.classList.remove("opacity-0", "invisible", "pointer-events-none")
+    uploadBlogModal.classList.remove("invisible", "opacity-0");
+    modalBG.classList.remove("opacity-0", "invisible")
   })
 
   uploadBlogCloseBtn.addEventListener("click", () => {
-    uploadBlogModal.classList.add("invisible", "opacity-0", "pointer-events-none");
+    uploadBlogModal.classList.add("invisible", "opacity-0");
 
-    modalBG.classList.add("opacity-0", "invisible", "pointer-events-none")
+    modalBG.classList.add("opacity-0", "invisible")
   })
 
   // For Modal popup
@@ -154,12 +162,43 @@ if (userData) {
   })
 
   // For upload Blog fields checking
+}
 
+if (userData) {
+  userPic2.innerText = userData.fullName.charAt(0);
+
+  userName.innerText = userData.fullName;
+
+  navUserData();
 } else {
 
-  navRight.classList.remove("hidden");
-  navHidden.classList.add("hidden");
+  document.querySelector(".open-btn-1").classList.replace("hidden", "inline-flex");
 
+  document.querySelector(".open-btn-2").classList.replace("inline-flex", "hidden");
+
+  userName.classList.add("hidden");
+
+  userName2.classList.remove("hidden");
+
+  onAuthStateChanged(auth, (user) => {
+
+    if (user) {
+
+      const uid = user.uid;
+
+      userPic.src = user.photoURL;
+
+      userName2.innerText = user.displayName;
+
+      navUserData();
+
+    } else {
+
+      navRight.classList.remove("hidden");
+      navHidden.classList.add("hidden");
+
+    }
+  });
 }
 
 
@@ -371,7 +410,7 @@ const deleteEditBlogFunc = async (value, blogUid) => {
     modalBG.classList.remove("opacity-0", "invisible");
 
     titleBox.value = blogTtitle.innerText;
-    
+
     contentBox.value = blogDescription.innerText;
 
     // For Modal Close
@@ -436,7 +475,8 @@ const deleteEditBlogFunc = async (value, blogUid) => {
 
 }
 
-if (userData) {
+if (uid) {
+
   window.addEventListener("DOMContentLoaded", () => {
 
     loader.classList.remove("opacity-0", "invisible");

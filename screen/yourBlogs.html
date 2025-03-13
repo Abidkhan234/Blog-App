@@ -208,20 +208,41 @@
           Add Blog
         </button>
 
+        <!-- For google data -->
         <div
-          class="open-btn relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 cursor-pointer"
+          class="open-btn-1 open-btn relative hidden items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 cursor-pointer"
         >
           <span
-            class="font-semibold text-gray-600 dark:text-gray-300 text-xl"
-            id="userPic"
-          ></span>
+            class="font-semibold text-gray-600 dark:text-gray-300 text-xl content-center"
+            ><img src="" alt="" id="userPic" />
+          </span>
         </div>
+        <!-- For google data -->
+
+        <!-- For userData -->
+        <div
+          class="open-btn-2 open-btn relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 cursor-pointer"
+        >
+          <span
+            id="userPic2"
+            class="font-semibold text-gray-600 dark:text-gray-300 text-xl rounded-full"
+          >
+          </span>
+        </div>
+        <!-- For userData -->
 
         <div
           class="hiddenDiv absolute bottom-[-145%] right-[2%] opacity-0 invisible w-full max-w-[300px] flex flex-col gap-5 justify-center items-center bg-white text-[#181A2A] rounded-md py-2 px-3 transition-opacity duration-300"
         >
           <h2 class="text-2xl font-semibold text-center">
-            Welcome <span class="userName"></span>
+            Welcome
+            <!-- For Login data -->
+            <span class="userName-1"></span>
+            <!-- For Login data -->
+
+            <!-- For Google data  -->
+            <span class="userName-2 hidden"></span>
+            <!-- For Google data  -->
           </h2>
           <div class="flex gap-5">
             <button

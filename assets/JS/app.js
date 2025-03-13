@@ -30,12 +30,14 @@ const loginBtn = document.getElementById("login-btn");
 
 const signUpBtn = document.getElementById("signUp-btn");
 
+const googleBtn = document.getElementById("google-btn");
+
 const forgetPasswordBtn = document.getElementById("forget-password-btn");
 
 // All Elements
 
 
-import { auth, createUserWithEmailAndPassword, db, doc, getDoc, sendEmailVerification, sendPasswordResetEmail, setDoc, signInWithEmailAndPassword } from "./firebase.js";
+import { auth, createUserWithEmailAndPassword, db, doc, getDoc, provider, sendEmailVerification, sendPasswordResetEmail, setDoc, signInWithEmailAndPassword, signInWithPopup } from "./firebase.js";
 
 const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 ;
@@ -269,5 +271,40 @@ forgetPasswordBtn?.addEventListener("click", async (e) => {
 
 })
 
-
 // For Forget password form
+
+
+// For Google Sign in 
+
+googleBtn?.addEventListener("click", () => googleSignInBtn());
+
+const googleSignInBtn = () => {
+
+    localStorage.removeItem("userData");
+
+    signInWithPopup(auth, provider)
+        .then((result) => {
+
+            const user = result.user;
+
+            localStorage.setItem("uid", user.uid);
+
+            errorFunc("Logged In Successfully.", "green");
+
+            setTimeout(() => {
+                window.location.href = "../index.html";
+            }, 1000);
+
+        }).catch((error) => {
+
+            const errorCode = error.code;
+            const errorMessage = error.message;
+
+            errorFunc(errorMessage, "red");
+
+        });
+
+}
+
+
+// For Google Sign in 
