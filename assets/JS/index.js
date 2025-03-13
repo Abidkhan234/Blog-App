@@ -255,56 +255,47 @@ const makingCards = async () => {
         return new Date(b.timeZone.seconds * 1000 + b.timeZone.nanoseconds / 1e6) - new Date(a.timeZone.seconds * 1000 + a.timeZone.nanoseconds / 1e6);
     });
 
+    onAuthStateChanged(auth, (user) => {
+        blogData.forEach(async (v) => {
 
-    blogData.forEach(async (v) => {
+            const div = document.createElement("div");
+            div.className += "lg:col-span-6 col-span-12 border-2 border-[#242535] py-3 px-2.5 rounded-md flex flex-col gap-7";
 
-        const docRef = doc(db, "users", v.uid);
-        const docSnap = await getDoc(docRef);
-        let data;
+            div.innerHTML = `
+                  <div class="card-header flex justify-between items-center">
+                    <div
+                      class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600"
+                    >
+                      <span
+                        class="font-semibold text-gray-600 dark:text-gray-300 text-lg"
+                        id="userPic"
+                        >${user.displayName.charAt(0)}</span
+                      >
+                    </div>
+    
+                    <div class="text-sm font-medium">
+                    <span>${timeZoneFunc(v.timeZone)}</span>
+                    </div>
+    
+                  </div>
+                  <div class="flex flex-col gap-5">
+                    <h2
+                      class="card-heading lg:text-3xl text-2xl font-bold lg:tracking-wider lg:leading-9 sm:leading-7 text-balance"
+                    >
+                    ${v.title}
+                    </h2>
+                    <p
+                      class="card-content lg:text-lg lg:leading-8 sm:leading-6 sm:text-base text-sm"
+                    >
+                      ${v.description}
+                    </p>
+                  </div>`;
 
-        if (docSnap.exists()) {
-            data = docSnap.data().fullName;
-        } else {
-            // docSnap.data() will be undefined in this case
-            console.log("No such document!");
-        }
+            cardContainer.appendChild(div);
+        })
 
-
-        const div = document.createElement("div");
-        div.className += "lg:col-span-6 col-span-12 border-2 border-[#242535] py-3 px-2.5 rounded-md flex flex-col gap-7";
-
-        div.innerHTML = `
-              <div class="card-header flex justify-between items-center">
-                <div
-                  class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600"
-                >
-                  <span
-                    class="font-semibold text-gray-600 dark:text-gray-300 text-lg"
-                    id="userPic"
-                    >${data.charAt(0)}</span
-                  >
-                </div>
-
-                <div class="text-sm font-medium">
-                <span>${timeZoneFunc(v.timeZone)}</span>
-                </div>
-
-              </div>
-              <div class="flex flex-col gap-5">
-                <h2
-                  class="card-heading lg:text-3xl text-2xl font-bold lg:tracking-wider lg:leading-9 sm:leading-7 text-balance"
-                >
-                ${v.title}
-                </h2>
-                <p
-                  class="card-content lg:text-lg lg:leading-8 sm:leading-6 sm:text-base text-sm"
-                >
-                  ${v.description}
-                </p>
-              </div>`;
-
-        cardContainer.appendChild(div);
+        loader.classList.add("opacity-0", "invisible");
     })
 
-    loader.classList.add("opacity-0", "invisible");
+
 }
