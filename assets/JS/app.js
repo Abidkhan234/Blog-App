@@ -283,9 +283,14 @@ const googleSignInBtn = () => {
     localStorage.removeItem("userData");
 
     signInWithPopup(auth, provider)
-        .then((result) => {
+        .then(async (result) => {
 
             const user = result.user;
+        
+            await setDoc(doc(db, "users", user.uid), {
+                fullName: user.displayName,
+                email: user.email
+            });
 
             localStorage.setItem("uid", user.uid);
 
